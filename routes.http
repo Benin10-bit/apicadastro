@@ -1,0 +1,11 @@
+POST http://localhost:1992/register
+Content-Type: application/json
+
+{
+    "nome": "Petala",
+    "senha": "petala123"
+}
+
+###
+
+GET http://localhost:1992/register
