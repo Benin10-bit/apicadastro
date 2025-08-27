@@ -1,5 +1,5 @@
 import Fastify from "fastify";
-import bcrypt from "bcrypt";
+import bcrypt from 'bcrypt'
 import { dataBaseMemory } from "./database-memory.js";
 
 const server = Fastify({
