@@ -7,9 +7,9 @@ const server = Fastify({ logger: true });
 
 // 🔑 CORS global
 await server.register(fastifyCors, {
-  origin: "*",          // permite qualquer origem
-  methods: ["GET","POST","PUT","DELETE","OPTIONS"], // libera métodos
-  allowedHeaders: ["Content-Type", "Authorization"], // libera cabeçalhos
+  origin: "*",
+  methods: ["GET","POST","PUT","DELETE","OPTIONS"], 
+  allowedHeaders: ["Content-Type", "Authorization"],
 });
 
 const dataBase = new dataBaseMemory();
@@ -25,8 +25,8 @@ server.post("/register", async (request, reply) => {
   return reply.status(201).send({ message: "Usuário cadastrado com sucesso" });
 });
 
-server.get("/users", () => {
-  return dataBase.List();
+server.get("/users", async() => {
+  return await dataBase.List();
 });
 
 const port = process.env.PORT || 1992;

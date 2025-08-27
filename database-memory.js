@@ -4,17 +4,16 @@ import { sql } from "./db.js"
 export class dataBaseMemory{
     #users = new Map()
 
-    List(){
-        return Array.from(this.#users.entries()).map((userData) => {
-            const Id = userData[0]
-            const data = userData[1]
-
-            return{
-                Id,
-                ...data
-            }
-        })
+    async List() {
+    try {
+      // Consulta todos os usuários na tabela "users"
+      const users = await sql`SELECT id, username FROM users;`; // evita enviar senha
+      return users;
+    } catch (err) {
+      console.error("Erro ao listar usuários:", err);
+      return [];
     }
+  }
 
     async Create(user){
         const newId = randomUUID()
