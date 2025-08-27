@@ -25,4 +25,6 @@ server.get("/users", () => {
   return users;
 });
 
-server.listen({ port: 1992, host: "0.0.0.0" });
+const port = process.env.PORT || 1992;
+server.listen({ port, host: "0.0.0.0" });
+
