@@ -1,9 +1,15 @@
 import Fastify from "fastify";
-import bcrypt from 'bcrypt'
+import fastifyCors from "@fastify/cors";
+import bcrypt from "bcryptjs";
 import { dataBaseMemory } from "./database-memory.js";
 
-const server = Fastify({
-  logger: true,
+const server = Fastify({ logger: true });
+
+// 🔑 CORS global
+await server.register(fastifyCors, {
+  origin: "*",          // permite qualquer origem
+  methods: ["GET","POST","PUT","DELETE","OPTIONS"], // libera métodos
+  allowedHeaders: ["Content-Type", "Authorization"], // libera cabeçalhos
 });
 
 const dataBase = new dataBaseMemory();
@@ -16,15 +22,18 @@ server.post("/register", async (request, reply) => {
   const hash = await bcrypt.hash(senha, 10);
   await dataBase.Create({ username: nome, password: hash });
 
-  return reply.status(201).send();
+  return reply.status(201).send({ message: "Usuário cadastrado com sucesso" });
 });
 
-// Para listar usuários (somente teste)
 server.get("/users", () => {
-  const users = dataBase.List();
-  return users;
+  return dataBase.List();
 });
 
 const port = process.env.PORT || 1992;
-server.listen({ port, host: "0.0.0.0" });
-
+server.listen({ port, host: "0.0.0.0" }, (err, address) => {
+  if (err) {
+    server.log.error(err);
+    process.exit(1);
+  }
+  console.log(`🚀 Server rodando em: ${address}`);
+});
