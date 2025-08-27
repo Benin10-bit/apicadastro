@@ -1,10 +1,7 @@
-import { randomUUID } from "node:crypto"
-import { sql } from "./db.js"
+import { sql } from "./db.js";
 
-export class dataBaseMemory{
-    #users = new Map()
-
-    async List() {
+export class dataBaseMemory {
+  async List() {
     try {
       // Consulta todos os usuários na tabela "users"
       const users = await sql`SELECT id, username FROM users;`; // evita enviar senha
@@ -15,9 +12,14 @@ export class dataBaseMemory{
     }
   }
 
-    async Create(user){
-        const newId = randomUUID()
+  async Create(user) {
+    await sql`INSERT INTO users (username, password) VALUES (${user.username}, ${user.password});`;
+  }
 
-        await sql`INSERT INTO users (username, password) VALUES (${user.username}, ${user.password});`
-    }
+  async Login(user) {
+    const result =
+      await sql`SELECT password FROM users WHERE username = ${user};`;
+    if (result.length === 0) return null; // usuário não encontrado
+    return result[0].password; // retorna apenas o hash da senha
+  }
 }

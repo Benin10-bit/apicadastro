@@ -8,7 +8,7 @@ const server = Fastify({ logger: true });
 // 🔑 CORS global
 await server.register(fastifyCors, {
   origin: "*",
-  methods: ["GET","POST","PUT","DELETE","OPTIONS"], 
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
 });
 
@@ -25,7 +25,25 @@ server.post("/register", async (request, reply) => {
   return reply.status(201).send({ message: "Usuário cadastrado com sucesso" });
 });
 
-server.get("/users", async() => {
+server.post("/login", async (request, reply) => {
+  const { nome, senha } = request.body;
+
+  const passwordHash = await dataBase.Login(nome);
+
+  if (!passwordHash) {
+    return reply.status(404).send("Usuário não encontrado");
+  }
+
+  const result = await bcrypt.compare(senha, passwordHash);
+
+  if (result) {
+    return reply.status(200).send("Login permitido");
+  } else {
+    return reply.status(401).send("Senha incorreta");
+  }
+});
+
+server.get("/users", async () => {
   return await dataBase.List();
 });
 

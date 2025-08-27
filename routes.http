@@ -8,4 +8,14 @@ Content-Type: application/json
 
 ###
 
-GET http://localhost:1992/register
+GET http://localhost:1992/users
+
+###
+
+POST http://localhost:1992/login
+Content-Type: application/json
+
+{
+    "nome": "Agatha da Cunha",
+    "senha": "5bt^4LClwOo"
+}
